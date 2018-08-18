@@ -22,17 +22,19 @@
 
         util = {
             done: function(e, u) {
-                // console.log(u.yv);
                 function _() {
-                    e.setAttribute('style', 'transform: translate(' + u.ix + 'px, ' + Number(u.iy + u.vy) + 'px);');
-                    
-                    if (u.iy > 0 || u.iy - u.wh < -u.h) {
-                        u.iy = Math.floor(u.iy - (u.iy / 10));
+                    if (u.iy > 0) {
+                        u.iy = Math.floor(u.iy - (u.iy / 20));
+                        e.setAttribute('style', 'transform: translate(' + Number(u.ix) + 'px, ' + Number(u.iy) + 'px);');
                         requestAnimationFrame(_);
-                    } else if (u.vy !== 0) {
+                    } else if (u.iy - u.wh < -u.h) {
+                        u.iy = Math.floor(u.iy - ((u.iy + u.wh) / 20));
+                        e.setAttribute('style', 'transform: translate(' + Number(u.ix) + 'px, ' + Number(u.iy) + 'px);');
+                        requestAnimationFrame(_);
+                    } else if (u.vy > 0.5 || u.vy < -0.5) {
+                        e.setAttribute('style', 'transform: translate(' + Number(u.ix + u.vx) + 'px, ' + Number(u.iy + u.vy) + 'px);');
                         requestAnimationFrame(_);
                     };
-                    
                 }
                 requestAnimationFrame(_);
             },
@@ -40,14 +42,12 @@
                 u.vx = u.sx - u.ex;
                 u.vy = u.sy - u.ey;
                 function _(){
-                    if (u.vy !== 0) {
+                    if (u.vy > 0.5 || u.vy < -0.5) {
                         var f = 1;
                         if (u.vy < 0) {
                             f = -1;
-                        }
-                        u.vy = Math.floor(Math.abs(u.vy) - (Math.abs(u.vy) / 50));
-                        console.log(u.vy);
-                        u.vy *= f;
+                        };
+                        u.vy = (Math.abs(u.vy) - (Math.abs(u.vy) / 100)) * f;
                         requestAnimationFrame(_);
                     }
                 };
@@ -80,8 +80,6 @@
                 util.ing(this, u);
             }
             end = function(e){
-                // (option['scroll-x']) && (u.xv = u.sx - u.ex);
-                // (option['scroll-y']) && (u.yv = u.sy - u.ey);
                 util.done(this, u);
             }
 
